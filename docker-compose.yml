@@ -1,0 +1,27 @@
+version: '2'
+services:
+  libvirt:
+    build: .
+    pid: host
+    privileged: true
+    ports:
+      - "16509:16509"
+    # network_mode: host
+    restart: always
+    volumes:
+      # Mounts which are needed for virtualiyation
+      - /lib/modules:/lib/modules:ro
+      # - /run:/run
+      - /dev:/dev
+      - /sys/fs/cgroup:/sys/fs/cgroup
+      # Configuration
+      - ./libvirt.conf:/etc/libvirt/libvirtd.conf
+      - ./qemu.conf:/etc/libvirt/qemu.conf
+      # Images
+      - /var/lib/libvirt/images:/var/lib/libvirt/images
+      # Volumes for libvirt instances
+      - libvirtd:/var/lib/libvirt
+      - libvirt_qemu:/etc/libvirt/qemu
+volumes:
+  libvirtd: {}
+  libvirt_qemu: {}
